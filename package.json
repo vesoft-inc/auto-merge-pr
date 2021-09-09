@@ -1,0 +1,29 @@
+{
+  "name": "git_action_test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "@actions/core": "^1.5.0",
+    "@actions/exec": "^1.1.0",
+    "@actions/github": "^5.0.0",
+    "dingtalk-robot-sender": "github:x-cold/dingtalk-robot#master",
+    "q": "^1.5.1",
+    "striptags": "^3.2.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/klay-ke/auto-merge-pr.git"
+  },
+  "keywords": [],
+  "author": "klay-ke",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/klay-ke/auto-merge-pr/issues"
+  },
+  "homepage": "https://github.com/klay-ke/auto-merge-pr#readme"
+}
