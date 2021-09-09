@@ -1,0 +1,24 @@
+{
+  "name": "git_action_test",
+  "version": "1.0.0",
+  "description": "nebula pr merge management",
+  "main": "src/index.js",
+  "dependencies": {
+    "@octokit/core": "^3.5.1",
+    "q": "^1.5.1",
+    "shelljs": "^0.8.4"
+  },
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/klay-ke/Git_Action_Test.git"
+  },
+  "author": "Lingyun Ke",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/klay-ke/Git_Action_Test/issues"
+  },
+  "homepage": "https://github.com/klay-ke/Git_Action_Test#readme"
+}
