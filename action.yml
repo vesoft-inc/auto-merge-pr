@@ -1,0 +1,39 @@
+name: Auto Merge Approved Pull Request
+author: klay-ke
+description: Auto merge approved pull request if maintainer comments /merge.
+inputs:
+  send-to-dingtalk-group:
+    description: Boolean. Set to true if it needs to send merge info to ding talk group. If true then dingtalk-access-token and dingtalk-secret are required.
+    default: false
+    required: false
+  dingtalk-access-token:
+    description: Dingtalk bot access token.
+    default: ''
+    required: false
+  dingtalk-secret:
+    description: Dingtalk secret.
+    default: ''
+  maintainer-team-name:
+    description: Name of maintainer team.
+    required: true
+  gh-token:
+    description: Github token.
+    required: true
+  ci-command:
+    description: The command to use for running test.
+    required: false
+outputs:
+  merge-info:
+    description: Final merge info.
+  error-log:
+    description: Error log if build failed with the command passed in inputs.
+  pass-log:
+    description: Log if build passed with the command passed in inputs.
+  merged:
+    description: Boolean, true if any pr merged.
+branding:
+  color: green
+  icon: git-pull-request
+runs:
+  using: node12
+  main: 'index.js'
