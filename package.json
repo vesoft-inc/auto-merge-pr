@@ -4,10 +4,10 @@
   "description": "nebula pr merge management",
   "main": "src/index.js",
   "dependencies": {
-    "@octokit/core": "^3.5.1"
+    "@octokit/core": "^3.5.1",
+    "q": "^1.5.1",
+    "shelljs": "^0.8.4"
   },
-  "type": "module",
-  "devDependencies": {},
   "scripts": {
     "start": "node src/index.js"
   },
