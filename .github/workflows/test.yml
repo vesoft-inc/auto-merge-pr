@@ -36,5 +36,8 @@ jobs:
         ls
         node test.js
       env: 
-        cmd: 'echo blabla'
+        cmd: |
+          echo blabla
+          echo lalala
+          echo coco
       
