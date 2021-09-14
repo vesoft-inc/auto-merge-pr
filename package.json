@@ -2,14 +2,18 @@
   "name": "git_action_test",
   "version": "1.0.0",
   "description": "nebula pr merge management",
-  "main": "src/index.js",
+  "main": "src/main.js",
   "dependencies": {
     "@octokit/core": "^3.5.1",
+    "async": "^3.2.1",
+    "dingtalk-robot-sender": "github:x-cold/dingtalk-robot",
     "q": "^1.5.1",
-    "shelljs": "^0.8.4"
+    "shelljs": "^0.8.4",
+    "striptags": "^3.2.0",
+    "urlencode": "^1.1.0"
   },
   "scripts": {
-    "start": "node src/index.js"
+    "start": "node src/main.js"
   },
   "repository": {
     "type": "git",

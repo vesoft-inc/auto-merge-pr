@@ -1,4 +1,4 @@
-name: auto merge
+name: test
 
 on:
   schedule:
@@ -11,15 +11,10 @@ defaults:
     shell: bash
 
 jobs:
-  merge:
+  test-flow:
     name: auto merge all approved PRs
     runs-on: ubuntu-latest
     env: 
-      GH_TOKEN: ${{ secrets.GH_TOKEN }}
-      DINGTALK_ACCESS_TOKEN: ${{ secrets.DINGTALK_ACCESS_TOKEN }}
-      DINGTALK_SECRET: ${{ secrets.DINGTALK_SECRET }}
-      MAINTAINER_TEAM: ${{ secrets.MAINTAINER_TEAM }}
-    steps:
     - name: Check out main branch
       uses: actions/checkout@v2
       with:
@@ -32,7 +27,12 @@ jobs:
         echo "OWNER_NAME=$(echo '${{ github.repository }}' | awk -F '/' '{print $1}')" >> $GITHUB_ENV
         echo "REPOSITORY_NAME=$(echo '${{ github.repository }}' | awk -F '/' '{print $2}')" >> $GITHUB_ENV
       shell: bash
-    - name: Install Dependency
-      run: npm install
-    - run: npm run start
+    - run: npm install
+    - run: ls
+    - run: cd Git_Action_Test
+    - run: ls
+    - run: cd src
+    - run: node test.js
+      with: 
+        cmd: 'echo blabla'
       
