@@ -33,5 +33,6 @@ jobs:
     - run: ls
     - run: cd src
     - run: node test.js
-      env: 'echo blabla'
+      env: 
+        cmd: 'echo blabla'
       
