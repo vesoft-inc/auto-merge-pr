@@ -31,6 +31,7 @@ jobs:
         npm install
         git branch
         ls
+    - run: |
         cd src
         ls
         node test.js
