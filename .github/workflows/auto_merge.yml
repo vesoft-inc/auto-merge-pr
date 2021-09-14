@@ -20,6 +20,9 @@ jobs:
       DINGTALK_SECRET: ${{ secrets.DINGTALK_SECRET }}
       MAINTAINER_TEAM: ${{ secrets.MAINTAINER_TEAM }}
     steps:
+    - uses: webiny/action-post-run@2.0.1
+      with:
+        run: sh -c "find . -mindepth 1 -delete"
     - name: Check out main branch
       uses: actions/checkout@v2
       with:
@@ -35,4 +38,5 @@ jobs:
     - name: Install Dependency
       run: npm install
     - run: npm run start
-      
+      env:
+        COMMAND_FOR_TESTING:      

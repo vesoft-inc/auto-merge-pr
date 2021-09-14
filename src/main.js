@@ -3,7 +3,7 @@ const q = require('q');
 const striptags = require('striptags');
 const async = require("async");
 const ChatBot = require('dingtalk-robot-sender');
-const shell = require('shelljs');
+const exec = require('@actions/exec');
 
 // const octokit = new Octokit({ auth: process.env.GH_TOKEN);
 // const repoName = process.env.REPOSITORY_NAME;
@@ -25,7 +25,8 @@ const robot = new ChatBot({
 });
 
 let mergablePr = [];
-let maintainerList = [];
+let failedToMerge = [];
+let succeedToMerge = [];
 
 // getAllMaintainers()
 // getAllOpenPrs()
@@ -45,7 +46,9 @@ async function getAllMaintainers() {
         team_slug: maintainerTeamName,
         role: 'maintainer'
     }).then(res => {
+        let maintainerList = [];
         res.data.forEach(maintainer => maintainerList.push(maintainer.login));
+        return maintainerList;
     });
 }
 
@@ -55,14 +58,6 @@ async function getAllOpenPrs() {
     }).then(res => {
         return res.data.items;
     });
-}
-
-async function getSinglePr(prNum) {
-    return octokit.request('GET /repos/{owner}/{repo}/pulls/{pull_number}', {
-        owner: ownerName,
-        repo: repoName,
-        pull_number: prNum
-    })
 }
 
 async function mergePr(prNum, commit_title, commit_message) {
@@ -94,18 +89,43 @@ async function getMergablePrs(pr) {
     });
 }
 
-async 
+function runTest() {
+    const exec = require('@actions/exec');
 
-async function sendMergeInfoToDingtalk(merged, unmerged, phone) {
+    let output = '';
+    let error = '';
+
+    const options = {};
+    options.listeners = {
+        stdout: (data) => {
+            output += data.toString();
+        },
+        stderr: (data) => {
+            error += data.toString();
+        }
+    };
+
+    const returnCode = await exec.exec(process.env.COMMAND_FOR_TESTING, [], options);
+
+    if (returnCode != 0) {
+        console.log("cmd failed with error:");
+        console.log(stderr);
+        return false;
+    }
+    return true;
+}
+
+async function sendMergeInfoToDingtalk() {
     let title = "merge info";
     let text = "## merge info\n" +
     "> merge successfully:\n" +
-    "> " + merged.join() + "\n\n"  +
+    "> " + succeedToMerge.join() + "\n\n"  +
     "> failed to merge: \n" +
-    "> " + unmerged.join() + "\n";
+    "> " + failedToMerge.join() + "\n";
     let at = {
-        "atMobiles": phone, 
+        // "atMobiles": phone, 
         "isAtAll": false
     };
     return robot.markdown(title,text,at);    
 }
+
