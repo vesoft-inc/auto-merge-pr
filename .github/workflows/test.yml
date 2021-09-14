@@ -27,12 +27,13 @@ jobs:
         echo "OWNER_NAME=$(echo '${{ github.repository }}' | awk -F '/' '{print $1}')" >> $GITHUB_ENV
         echo "REPOSITORY_NAME=$(echo '${{ github.repository }}' | awk -F '/' '{print $2}')" >> $GITHUB_ENV
       shell: bash
-    - run: npm install
-    - run: git branch
-    - run: ls
-    - run: cd src
-    - run: ls
-    - run: node test.js
+    - run: |
+        npm install
+        git branch
+        ls
+        cd src
+        ls
+        node test.js
       env: 
         cmd: 'echo blabla'
       
