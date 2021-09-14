@@ -14,7 +14,7 @@ jobs:
   test-flow:
     name: auto merge all approved PRs
     runs-on: ubuntu-latest
-    env: 
+    steps : 
     - name: Check out main branch
       uses: actions/checkout@v2
       with:
