@@ -29,8 +29,6 @@ jobs:
       shell: bash
     - run: npm install
     - run: ls
-    - run: cd Git_Action_Test
-    - run: ls
     - run: cd src
     - run: node test.js
       env: 
