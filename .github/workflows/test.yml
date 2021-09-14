@@ -12,7 +12,7 @@ defaults:
 
 jobs:
   test-flow:
-    name: auto merge all approved PRs
+    name: test
     runs-on: ubuntu-latest
     steps : 
     - name: Check out main branch
@@ -33,6 +33,5 @@ jobs:
     - run: ls
     - run: cd src
     - run: node test.js
-        with: 
-          cmd: 'echo blabla'
+      env: 'echo blabla'
       
