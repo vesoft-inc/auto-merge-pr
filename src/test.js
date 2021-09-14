@@ -1,5 +1,7 @@
-const exec = require('child_process').exec;
+const exec = require('shelljs').exec;
 
-console.log(process.env.cmd);
-exec("echo 1234");
-exec(process.env.cmd);
+exec(process.env.cmd, (code, stdout, stderr) => {
+    console.log(code);
+    console.log(stdout);
+    console.log(stderr);
+});
