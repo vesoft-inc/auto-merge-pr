@@ -28,8 +28,10 @@ jobs:
         echo "REPOSITORY_NAME=$(echo '${{ github.repository }}' | awk -F '/' '{print $2}')" >> $GITHUB_ENV
       shell: bash
     - run: npm install
+    - run: git branch
     - run: ls
     - run: cd src
+    - run: ls
     - run: node test.js
       env: 
         cmd: 'echo blabla'
