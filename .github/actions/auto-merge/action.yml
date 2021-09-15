@@ -1,3 +1,0 @@
-name: 'Auto Merge Approved Pull Request'
-description: 'Auto merge approved pull request if maintainer comments /merge'
-inputs:

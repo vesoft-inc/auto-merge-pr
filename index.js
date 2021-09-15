@@ -5,26 +5,26 @@ const core = require('@actions/core');
 const q = require('q');
 const striptags = require('striptags');
 const async = require("async");
-const ChatBot = require('dingtalk-robot-sender');
+const { ChatBot } = require('dingtalk-robot-sender');
 const fs = require('fs');
 
-// const octokit = github.getOctokit(core.getInput('GH_TOKEN'));
-// const repoName = core.getInput('REPOSITORY_NAME');
-// const ownerName = core.getInput('OWNER_NAME');
-// const maintainerTeamName = core.getInput('MAINTAINER_TEAM_NAME');
-// const dingTalkAccessToken = core.getInput('DINGTALK_ACCESS_TOKEN');
-// const dingTalkSecret = core.getInput('DINGTALK_SECRET');
+// const repoName = repo.repo;
+// const ownerName = repo.owner;
+// const octokit = github.getOctokit(core.getInput('gh-token'));
+// const maintainerTeamName = core.getInput('maintainer-team-name');
+// const dingtalkAccessToken = core.getInput('dingtalk-access-token');
+// const dingtalkSecret = core.getInput('dingtalk-secret');
 
 const octokit = github.getOctokit('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');
 const repoName = "nebula";
 const ownerName = "vesoft-inc";
 const maintainerTeamName = "nebula-force";
-const dingTalkAccessToken = "93b071fc90528b2ecc09a4702692c8b630f0622d7447ab9d957399c2a0043c32";
-const dingTalkSecret = 'SECaea7282b5526b290528d6d3149c8a2b73fb1c4ea64e08cdb79d68d5f99b809e1';
+const dingtalkAccessToken = "93b071fc90528b2ecc09a4702692c8b630f0622d7447ab9d957399c2a0043c32";
+const dingtalkSecret = 'SECaea7282b5526b290528d6d3149c8a2b73fb1c4ea64e08cdb79d68d5f99b809e1';
 
 const robot = new ChatBot({
-    webhook: `https://oapi.dingtalk.com/robot/send?access_token=${dingTalkAccessToken}`,
-    secret: dingTalkSecret
+    webhook: `https://oapi.dingtalk.com/robot/send?access_token=${dingtalkAccessToken}`,
+    secret: dingtalkSecret
 });
 
 let mergeablePr = {};
