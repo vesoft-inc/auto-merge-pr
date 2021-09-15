@@ -20,13 +20,13 @@ jobs:
       DINGTALK_SECRET: ${{ secrets.DINGTALK_SECRET }}
       MAINTAINER_TEAM: ${{ secrets.MAINTAINER_TEAM }}
     steps:
-    - uses: webiny/action-post-run@2.0.1
-      with:
-        run: sh -c "find . -mindepth 1 -delete"
     - name: Check out main branch
       uses: actions/checkout@v2
       with:
         ref: main
+    - uses: webiny/action-post-run@2.0.1
+      with:
+        run: rm -rf *.patch
     - name: Intall Node JS
       uses: actions/setup-node@v2
       with:

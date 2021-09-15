@@ -1,5 +1,3 @@
-const exec = require('shelljs').exec;
-
-exec(process.env.cmd, (code, stdout, stderr) => {
-
-});
+const github = require('@actions/github');
+const repo = github.context.repo;
+console.log(repo);
