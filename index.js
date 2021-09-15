@@ -8,19 +8,13 @@ const async = require("async");
 const { ChatBot } = require('dingtalk-robot-sender');
 const fs = require('fs');
 
-// const repoName = repo.repo;
-// const ownerName = repo.owner;
-// const octokit = github.getOctokit(core.getInput('gh-token'));
-// const maintainerTeamName = core.getInput('maintainer-team-name');
-// const dingtalkAccessToken = core.getInput('dingtalk-access-token');
-// const dingtalkSecret = core.getInput('dingtalk-secret');
-
-const octokit = github.getOctokit('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');
-const repoName = "nebula";
-const ownerName = "vesoft-inc";
-const maintainerTeamName = "nebula-force";
-const dingtalkAccessToken = "93b071fc90528b2ecc09a4702692c8b630f0622d7447ab9d957399c2a0043c32";
-const dingtalkSecret = 'SECaea7282b5526b290528d6d3149c8a2b73fb1c4ea64e08cdb79d68d5f99b809e1';
+const repoName = repo.repo;
+const ownerName = repo.owner;
+const octokit = github.getOctokit(core.getInput('gh-token'));
+const maintainerTeamName = core.getInput('maintainer-team-name');
+const dingtalkAccessToken = core.getInput('dingtalk-access-token');
+const dingtalkSecret = core.getInput('dingtalk-secret');
+const ci = core.getInput('ci-command');
 
 const robot = new ChatBot({
     webhook: `https://oapi.dingtalk.com/robot/send?access_token=${dingtalkAccessToken}`,
@@ -29,6 +23,8 @@ const robot = new ChatBot({
 
 let mergeablePr = {};
 let failedToMerge = [];
+let errorLog = "";
+let passLog = "";
 
 function main() {
     q.all([getAllMaintainers(),getAllOpenPrs()])
@@ -39,8 +35,9 @@ function main() {
             .then(runTest)
             .then(mergeValidPr)
             .then(sendMergeInfoToDingtalk)
+            .then(setOutputInfo)
         } else {
-            core.setOutput("no mergeable pr");
+            setOutputInfo();
         }
     });
 }
@@ -110,34 +107,29 @@ async function getMergeablePrs(res) {
 async function runTest() {
     let defer = q.defer();
 
-    let output = '';
-    let error = '';
-
     const options = {};
     options.listeners = {
         stdout: (data) => {
-            output += data.toString();
+            console.log(data.toString());
+            passLog += data.toString();
         },
         stderr: (data) => {
-            error += data.toString();
+            console.log(data.toString());
+            errorLog += data.toString();
         }
     };
 
     const returnCode = false;
-    while (!returnCode) {
-        returnCode = await exec.exec(process.env.COMMAND_FOR_TESTING);
+    while (!returnCode && Object.keys(mergeablePr).length > 0) {
+        returnCode = await exec.exec(ci, [], options);
         if (returnCode != 0) {
             const kickout = getRandomInt(Object.keys(mergeablePr).length);
             const pr = mergeablePr[Object.keys(mergeablePr)[kickout]];
             await exec.exec(`git apply -R ${pr.number}.patch`);
             failedToMerge.push(pr.html_url);
             delete mergeablePr[pr.number];
-            console.log("build failed with error:");
-            console.log(error);
         }
     }
-    console.log("build passed!");
-    console.log(output);
     defer.resolve();
     return defer.promise;
 }
@@ -158,7 +150,6 @@ async function sendMergeInfoToDingtalk() {
             // "atMobiles": phone, 
             "isAtAll": false
         };
-        core.setOutput("merge successfully:\n" + succeedToMerge.join() + "\n\n" + "failed to merge: \n" + failedToMerge.join() + "\n");
         return robot.markdown(title,text,at);
     }    
 }
@@ -175,4 +166,13 @@ async function getAllPatchesAndApply() {
             }
         });
     });
+}
+
+async function setOutputInfo() {
+    core.setOutput("merged", Object.keys(mergeablePr).length > 0);
+    core.setOutput("error-log", errorLog);
+    core.setOutput("pass-log", passLog);
+    core.setOutput("merge-info", Object.keys(mergeablePr).length > 0 ? 
+        "merge successfully:\n" + succeedToMerge.join() + "\n\n" + "failed to merge: \n" + failedToMerge.join() + "\n" : 
+        "not any pr was merged");
 }
