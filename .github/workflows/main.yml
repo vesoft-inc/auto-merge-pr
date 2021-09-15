@@ -1,0 +1,42 @@
+name: auto merge
+
+on:
+  schedule:
+    - cron: '0 8 * * *'
+
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  merge:
+    name: auto merge all approved PRs
+    runs-on: ubuntu-latest
+    env: 
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+      DINGTALK_ACCESS_TOKEN: ${{ secrets.DINGTALK_ACCESS_TOKEN }}
+      DINGTALK_SECRET: ${{ secrets.DINGTALK_SECRET }}
+      MAINTAINER_TEAM: ${{ secrets.MAINTAINER_TEAM }}
+    steps:
+    - name: Check out main branch
+      uses: actions/checkout@v2
+      with:
+        ref: main
+    - uses: webiny/action-post-run@2.0.1
+      with:
+        run: rm -rf *.patch
+    - name: Intall Node JS
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+    - run: |
+        echo "OWNER_NAME=$(echo '${{ github.repository }}' | awk -F '/' '{print $1}')" >> $GITHUB_ENV
+        echo "REPOSITORY_NAME=$(echo '${{ github.repository }}' | awk -F '/' '{print $2}')" >> $GITHUB_ENV
+      shell: bash
+    - name: Install Dependency
+      run: npm install
+    - run: npm run start
+      env:
+        COMMAND_FOR_TESTING:      
